@@ -1,0 +1,7 @@
+.test.test {
+    width: 50%;
+    height: 50%;
+    transition: transform3d(0, -50%, 0);
+}
+
+.test .test--child { width: 50%; }
