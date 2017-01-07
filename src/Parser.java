@@ -6,42 +6,53 @@ import java.util.LinkedList;
  */
 public class Parser {
 
-    public static void parse(LinkedList<Token> tokens) {
-        ArrayList<Node> tree = new ArrayList<Node>();
+    public static Node parse(LinkedList<Token> tokens) {
+        Node root = new Node();
 
         while(true) {
             if(tokens.size() == 0) break;
-            tree.add(Parser.parseToken(tokens));
+            Parser.parseToken(tokens, root);
         }
 
-        for(int i = 0; i < tree.size(); i++) {
-            System.out.println(tree.get(i).toString());
-        }
+        return root;
     }
 
-    private static Node parseToken(LinkedList<Token> tokens) {
-        String content, selector;
+    private static Node parseToken(LinkedList<Token> tokens, Node root) {
+        Node tree;
 
         while(tokens.peek().tag.equals("WHITESPACE")) { tokens.poll(); }
 
-        selector = Parser.parseSelector(tokens);
-        content = Parser.parseContent(tokens);
+        tree = Parser.parseSelector(tokens, root);
+        tree.content = Parser.parseContent(tokens);
 
-        return new Node(selector, content);
+        return tree;
     }
 
-    private static String parseSelector(LinkedList<Token> tokens) {
-        StringBuilder sb = new StringBuilder();
+    private static Node parseSelector(LinkedList<Token> tokens, Node tree) {
+        Token next;
+        Node nextNode;
 
         while(true) {
-            if(tokens.peek() == null || tokens.peek().content.equals("{")) {
+            if (tokens.peek() == null || tokens.peek().content.equals("{")) {
                 break;
             }
 
-            sb.append(tokens.poll().content);
+            next = tokens.poll();
+
+            if(next.tag.equals("WHITESPACE")) continue;
+
+            if(next.content.equals("{")) break;
+
+            nextNode = tree.find(next.content);
+
+            if(nextNode == null) {
+                nextNode = new Node(next.content);
+                tree.addChild(nextNode);
+                tree = nextNode;
+            }
         }
 
-        return sb.toString();
+        return tree;
     }
 
     private static String parseContent(LinkedList<Token> tokens) {

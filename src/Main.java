@@ -47,10 +47,8 @@ public class Main {
         String fileContent = new String(Files.readAllBytes(Paths.get("test.css")));
 
         tokens = Lexer.lex(fileContent, tokenExpressions);
-//        for (Token token : tokens) {
-//            System.out.println(token);
-//        }
 
-        Parser.parse(tokens);
+        Node tree = Parser.parse(tokens);
+        System.out.println(tree.toString());
     }
 }

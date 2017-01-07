@@ -32,15 +32,34 @@ public class Node {
         this("", "", null);
     }
 
+    public Node find(String selector) {
+        for(int i = 0 ; i < this.children.size(); i++) {
+            if(this.children.get(i).selector.equals(selector)) {
+                return this.children.get(i);
+            }
+        }
+
+        return null;
+    }
+
     public void addChild(Node child) {
         children.add(child);
     }
 
-    public ArrayList<Node> getChidlren() {
+    public ArrayList<Node> getChildren() {
         return children;
     }
 
     public String toString() {
-        return "Selector: " + this.selector + " Content: " + this.content + " Children: " + this.children.size();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Selector: " + this.selector + " Content: " + this.content);
+        if(this.children.size() > 0) {
+            sb.append("\nChildren: \n");
+            for(int i = 0; i < this.children.size(); i++) {
+                sb.append(this.children.get(i).toString() + "\n");
+            }
+        }
+
+        return sb.toString();
     }
 }
